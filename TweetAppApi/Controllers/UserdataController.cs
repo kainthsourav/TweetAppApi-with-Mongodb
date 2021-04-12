@@ -29,7 +29,7 @@ namespace TweetAppApi
             return _userService.GetAllUsers();
         }
 
-        [HttpGet("{id:length(24)}",Name ="GetUser")]
+        [HttpGet("{id}")]
         public ActionResult<List<UserModel>> Get(int id)
         {
             List<UserModel> userModels = new List<UserModel>();
