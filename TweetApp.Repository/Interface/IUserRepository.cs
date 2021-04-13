@@ -10,7 +10,7 @@ namespace TweetApp.Repository.Interface
     public interface IUserRepository
     {
         List<UserModel> FindAll();
-        List<UserModel> FindByCondtion(Expression<Func<UserModel, bool>> expression);
+        UserModel FindByCondtion(Expression<Func<UserModel, bool>> expression);
         bool Create(UserModel data);
         bool Update(UserModel data);
         bool Delete(UserModel data);

@@ -29,8 +29,8 @@ namespace TweetAppApi
             return _userService.GetAllUsers();
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<List<UserModel>> Get(int id)
+        [HttpGet("getUsers/{id}")]
+        public ActionResult<List<UserModel>> Get(string id)
         {
             List<UserModel> userModels = new List<UserModel>();
             userModels = _userService.GetUserById(id);
@@ -41,15 +41,66 @@ namespace TweetAppApi
             return userModels;
         }
 
-        [HttpPost]
+        [HttpPost("regsiter")]
         public ActionResult RegisterUser([FromBody] UserModel userModel)
         {
             _userService.RegisterUser(userModel);
+            return Ok();
+        }
+        
+        [HttpPost("login")]
+        public ActionResult<List<UserModel>> Login([FromBody] UserModel userModel)
+        {
+            var result= _userService.Login(userModel);
+            return result;
+        }
+
+        [HttpPost("changePassword")]
+        public ActionResult ChangePassword(ChangePasswordModel changePassword)
+        {
+            bool status = false;
+            try
+            {
+                _userService.ChangePassword(changePassword);
+                status = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Ok();
+        }
+        
+        [HttpGet("getUsersByUsername/{emailId}")]
+        public ActionResult<List<UserModel>> GetByUsername(string emailId)
+        {
+            List<UserModel> userModels = new List<UserModel>();
+
+            userModels=_userService.GetUserByUsername(emailId);
+
+            return userModels;
+           
+        }
+        
+        [HttpPost("resetPassword")]
+        public ActionResult ResetPassword(UserModel userModel)
+        { 
+            try
+            {
+                _userService.ResetPassword(userModel);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
             return Ok();
         }
         public IActionResult Index()
         {
             return Ok("TweetApp Web Api");
         }
+
+
     }
 }

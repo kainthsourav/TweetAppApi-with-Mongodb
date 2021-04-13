@@ -46,10 +46,9 @@ namespace TweetApp.Repository.Implementation
            return _userData.Find(UserData => true).ToList();   
         }
 
-        public List<UserModel> FindByCondtion(Expression<Func<UserModel, bool>> expression)
+        public UserModel FindByCondtion(Expression<Func<UserModel, bool>> expression)
         {
-            //_userData.Find<UserModel>(expression).FirstOrDefault();
-            throw new NotImplementedException();
+            return _userData.Find(expression).FirstOrDefault();
         }
 
         public bool Update(UserModel data)

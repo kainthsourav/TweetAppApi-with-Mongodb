@@ -12,7 +12,7 @@ namespace TweetApp.Service.Interface
         bool ChangePassword(ChangePasswordModel changePassword);
         bool ResetPassword(UserModel userModel);
         List<UserModel> GetAllUsers();
-        List<UserModel> GetUserById(int id);
+        List<UserModel> GetUserById(string id);
         List<UserModel> GetUserByUsername(string emailId);
         
     }

@@ -22,7 +22,7 @@ namespace TweetApp.Service.Implementation
             {
                 UserModel userModel = new UserModel();
                 userModel = _userRepository.FindByCondtion(x => x.email.Equals(changePassword.email) &&
-                              x.password.Equals(changePassword.password)).FirstOrDefault();
+                              x.password.Equals(changePassword.password));
                 if(userModel!=null)
                 {
                     userModel.password = changePassword.newPassword;
@@ -38,18 +38,16 @@ namespace TweetApp.Service.Implementation
             }
             return status;
         }
-
         public List<UserModel> GetAllUsers()
         {
             return _userRepository.FindAll().ToList();
         }
-
-        public List<UserModel> GetUserById(int id)
+        public List<UserModel> GetUserById(string id)
         {
             List<UserModel> userData = new List<UserModel>();
             try
             {
-                userData = _userRepository.FindByCondtion(x => x.Id.Equals(id)).ToList();
+                userData.Add(_userRepository.FindByCondtion(x => x.Id.Equals(id)));
             }
             catch (Exception)
             {
@@ -59,20 +57,20 @@ namespace TweetApp.Service.Implementation
 
             return userData;
         }
-
         public List<UserModel> GetUserByUsername(string emailId)
         {
-
-            throw new NotImplementedException();
+            List<UserModel> userModels = new List<UserModel>();
+            userModels.Add(_userRepository.FindByCondtion(x => x.email.Contains(emailId)));
+            return userModels;
         }
-
         public List<UserModel> Login(UserModel userModel)
         {
             List<UserModel> validUser = new List<UserModel>();
             try
             {
-                validUser = _userRepository.FindByCondtion(x => x.email.Equals(userModel.email))
-                            .Where(x => x.password == userModel.password).ToList();
+                validUser.Add(_userRepository.FindByCondtion(x => x.email.Equals(userModel.email)
+                && x.password.Equals(userModel.password)));
+                           
             }
             catch (Exception)
             {
@@ -81,7 +79,6 @@ namespace TweetApp.Service.Implementation
             }
             return validUser;
         }
-
         public bool RegisterUser(UserModel userModel)
         {
             bool status = false;
@@ -98,14 +95,13 @@ namespace TweetApp.Service.Implementation
             }
             return status;
         }
-
         public bool ResetPassword(UserModel userModel)
         {
             bool status = false;
             try
             {
                 UserModel updatePassword = new UserModel();
-                updatePassword = _userRepository.FindByCondtion(x => x.Equals(userModel.email)).FirstOrDefault();
+                updatePassword = _userRepository.FindByCondtion(x => x.Equals(userModel.email));
                 if(userModel.dob.ToString("MM/dd/yyyy")==updatePassword.dob.ToString("MM/dd/yyyy") && updatePassword!=null)
                 {
                     updatePassword.password = userModel.password;
