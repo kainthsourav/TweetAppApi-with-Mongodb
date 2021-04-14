@@ -16,12 +16,14 @@ namespace TweetAppApi
     public class TweetsController : ControllerBase
     {
         private readonly IUserService _userService;
-        public TweetsController(IUserService userService)
+        private readonly ITweetService _tweetService;
+        public TweetsController(IUserService userService,ITweetService tweetService)
         {
             _userService = userService;
-         
+            _tweetService = tweetService;
         }
 
+        #region User
         [HttpGet("users/all")]
         public ActionResult<List<UserModel>> Get()
         {
@@ -80,7 +82,7 @@ namespace TweetAppApi
             return userModels;
            
         }
-        
+
         [HttpPost("forgotPassword")]
         public ActionResult ForgotPassword(UserModel userModel)
         { 
@@ -99,7 +101,21 @@ namespace TweetAppApi
         {
             return Ok("TweetApp Web Api");
         }
+        #endregion
 
+        #region Tweets
 
+        [HttpPost("{username}/add")]
+        public ActionResult<List<TweetModel>> PostTweet([FromBody] TweetModel tweetModel)
+        {
+            return _tweetService.postTweet(tweetModel);
+        }
+
+        [HttpGet("all")]
+        public ActionResult<List<TweetModel>> getTweet()
+        {
+            return _tweetService.getAllTweets();
+        }
+        #endregion
     }
 }
