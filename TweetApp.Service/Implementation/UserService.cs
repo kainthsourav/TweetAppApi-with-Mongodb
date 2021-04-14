@@ -68,7 +68,8 @@ namespace TweetApp.Service.Implementation
             List<UserModel> validUser = new List<UserModel>();
             try
             {
-                validUser.Add(_userRepository.FindByCondtion(x => x.email.Equals(userModel.email)
+                validUser.Add(_userRepository.FindByCondtion(x => x.email.Equals(userModel.email) 
+                || x.username.Equals(userModel.username)
                 && x.password.Equals(userModel.password)));
                            
             }
@@ -85,8 +86,8 @@ namespace TweetApp.Service.Implementation
             try
             {
                 UserModel checkExist = new UserModel();
-                checkExist = _userRepository.FindByCondtion(x => x.email.Equals(userModel.email) 
-                              && x.username.Equals(userModel.username));
+                checkExist = _userRepository.FindByCondtion(x => x.email==userModel.email 
+                              || x.username==userModel.username);
                 if(checkExist==null)
                 {
                     userModel.createdAt = DateTime.Now;

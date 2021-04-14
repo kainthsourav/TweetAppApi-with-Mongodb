@@ -106,15 +106,37 @@ namespace TweetAppApi
         #region Tweets
 
         [HttpPost("{username}/add")]
-        public ActionResult<List<TweetModel>> PostTweet([FromBody] TweetModel tweetModel)
+        public ActionResult<TweetModel> PostTweet([FromBody] TweetModel tweetModel)
         {
-            return _tweetService.postTweet(tweetModel);
+            _tweetService.postTweet(tweetModel);
+            return Ok();
         }
 
         [HttpGet("all")]
         public ActionResult<List<TweetModel>> getTweet()
         {
             return _tweetService.getAllTweets();
+        }
+
+        [HttpGet("{username}")]
+        public ActionResult<List<TweetModel>> getUserTweets(string username)
+        {
+            return _tweetService.getAllTweetsOfUser(username);
+        }
+
+        [HttpPut("update/{id}")]
+        public ActionResult<List<TweetModel>> updateTweet([FromBody] TweetModel tweetModel)
+        {
+            bool status = false;
+            try
+            {
+                status=_tweetService.UpdateTweet(tweetModel);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Ok();
         }
         #endregion
     }

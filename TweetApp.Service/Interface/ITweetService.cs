@@ -9,9 +9,8 @@ namespace TweetApp.Service.Interface
     {
         List<TweetModel> getAllTweets();
         List<TweetModel> getAllTweetsOfUser(string username);
-        List<TweetModel> postTweet(TweetModel tweetModel);
-
-        bool UpdateTweet(string id, string tweetdesc);
+        bool postTweet(TweetModel tweetModel);
+        bool UpdateTweet(TweetModel tweetModel);
         bool DeleteTweet(string id);
         bool LikeTweet(string id);
         bool ReplyTweet(string id, TweetModel tweetModel);

@@ -10,9 +10,11 @@ namespace TweetApp.Service.Implementation
     public class TweetService : ITweetService
     {
         private readonly ITweetRepository _tweetRepository;
-        public TweetService(ITweetRepository tweetRepository)
+        private readonly IUserRepository _userRepository;
+        public TweetService(ITweetRepository tweetRepository,IUserRepository userRepository)
         {
             _tweetRepository = tweetRepository;
+            _userRepository = userRepository;
         }
         public bool DeleteTweet(string id)
         {
@@ -26,7 +28,14 @@ namespace TweetApp.Service.Implementation
 
         public List<TweetModel> getAllTweetsOfUser(string username)
         {
-            throw new NotImplementedException();
+            List<TweetModel> tweetModels = new List<TweetModel>();
+            UserModel user = new UserModel();
+            user=_userRepository.FindByCondtion(x => x.username.Equals(username));
+            if(user!=null)
+            {
+                tweetModels = _tweetRepository.FindAllByCondtion(x => x.userId.Equals(user.Id));
+            }
+            return tweetModels;
         }
 
         public bool LikeTweet(string id)
@@ -34,9 +43,9 @@ namespace TweetApp.Service.Implementation
             throw new NotImplementedException();
         }
 
-        public List<TweetModel> postTweet(TweetModel tweetModel)
+        public bool postTweet(TweetModel tweetModel)
         {
-            throw new NotImplementedException();
+           return _tweetRepository.Create(tweetModel);
         }
 
         public bool ReplyTweet(string id, TweetModel tweetModel)
@@ -44,9 +53,18 @@ namespace TweetApp.Service.Implementation
             throw new NotImplementedException();
         }
 
-        public bool UpdateTweet(string id, string tweetdesc)
+        public bool UpdateTweet(TweetModel tweetModel) 
         {
-            throw new NotImplementedException();
+            try
+            {
+                _tweetRepository.Update(tweetModel);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return false;
         }
     }
 }

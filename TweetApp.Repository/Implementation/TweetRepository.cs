@@ -23,6 +23,8 @@ namespace TweetApp.Repository.Implementation
             bool status = false;
             try
             {
+                data.createdAt = DateTime.Now;
+                data.updatedAt = DateTime.Now;
                 _tweetData.InsertOne(data);
                 return true;
             }
@@ -57,7 +59,7 @@ namespace TweetApp.Repository.Implementation
 
         public List<TweetModel> FindAllByCondtion(Expression<Func<TweetModel, bool>> expression)
         {
-            throw new NotImplementedException();
+            return _tweetData.Find(expression => true).ToList();
         }
 
         public TweetModel FindByCondtion(Expression<Func<TweetModel, bool>> expression)
@@ -67,7 +69,16 @@ namespace TweetApp.Repository.Implementation
 
         public bool Update(TweetModel data)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _tweetData.ReplaceOne(x => x.userId.Equals(data.userId), data);
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return false;
         }
     }
 }

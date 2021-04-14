@@ -57,7 +57,17 @@ namespace TweetApp.Repository.Implementation
 
         public bool Update(UserModel data)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _userData.ReplaceOne(x => x.email == data.email, data);
+                return true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return false;
         }
     }
 }
