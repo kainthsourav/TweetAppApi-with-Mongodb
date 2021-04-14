@@ -15,15 +15,14 @@ namespace TweetAppApi
     [ApiVersion("1.0")]
     public class TweetsController : ControllerBase
     {
-        private readonly ITweetService _userService;
-
-        public TweetsController(ITweetService userService)
+        private readonly IUserService _userService;
+        public TweetsController(IUserService userService)
         {
             _userService = userService;
          
         }
 
-        [HttpGet]
+        [HttpGet("users/all")]
         public ActionResult<List<UserModel>> Get()
         {
             return _userService.GetAllUsers();
@@ -55,13 +54,13 @@ namespace TweetAppApi
             return result;
         }
 
-        [HttpPost("changePassword")]
-        public ActionResult ChangePassword(ChangePasswordModel changePassword)
+        [HttpPost("resetPassword")]
+        public ActionResult ResetPassword(ChangePasswordModel changePassword)
         {
             bool status = false;
             try
             {
-                _userService.ChangePassword(changePassword);
+                _userService.ResetPassword(changePassword);
                 status = true;
             }
             catch (Exception)
@@ -71,23 +70,23 @@ namespace TweetAppApi
             return Ok();
         }
         
-        [HttpGet("getUsersByUsername/{emailId}")]
-        public ActionResult<List<UserModel>> GetByUsername(string emailId)
+        [HttpGet("user/search/{username}")]
+        public ActionResult<List<UserModel>> GetByUsername(string username)
         {
             List<UserModel> userModels = new List<UserModel>();
 
-            userModels=_userService.GetUserByUsername(emailId);
+            userModels=_userService.GetUserByUsername(username);
 
             return userModels;
            
         }
         
-        [HttpPost("resetPassword")]
-        public ActionResult ResetPassword(UserModel userModel)
+        [HttpPost("forgotPassword")]
+        public ActionResult ForgotPassword(UserModel userModel)
         { 
             try
             {
-                _userService.ResetPassword(userModel);
+                _userService.ForgotPassword(userModel);
             }
             catch (Exception)
             {

@@ -5,15 +5,15 @@ using TweetApp.DAL.Models;
 
 namespace TweetApp.Service.Interface
 {
-   public interface ITweetService
+   public interface IUserService
     {
         bool RegisterUser(UserModel userModel);
         List<UserModel> Login(UserModel userModel);
-        bool ChangePassword(ChangePasswordModel changePassword);
-        bool ResetPassword(UserModel userModel);
+        bool ResetPassword(ChangePasswordModel changePassword);
+        bool ForgotPassword(UserModel userModel);
         List<UserModel> GetAllUsers();
         List<UserModel> GetUserById(string id);
-        List<UserModel> GetUserByUsername(string emailId);
+        List<UserModel> GetUserByUsername(string username);
         
     }
 }

@@ -8,14 +8,14 @@ using System.Linq;
 
 namespace TweetApp.Service.Implementation
 {
-    public class TweetService : ITweetService
+    public class UserService : IUserService
     {
-        private readonly ITweetRepository _userRepository;
-        public TweetService(ITweetRepository userRepository)
+        private readonly IUserRepository _userRepository;
+        public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
-        public bool ChangePassword(ChangePasswordModel changePassword)
+        public bool ResetPassword(ChangePasswordModel changePassword)
         {
             bool status = false;
             try
@@ -57,10 +57,10 @@ namespace TweetApp.Service.Implementation
 
             return userData;
         }
-        public List<UserModel> GetUserByUsername(string emailId)
+        public List<UserModel> GetUserByUsername(string username)
         {
             List<UserModel> userModels = new List<UserModel>();
-            userModels.Add(_userRepository.FindByCondtion(x => x.email.Contains(emailId)));
+            userModels=_userRepository.FindAllByCondtion(x => x.username.Contains(username));
             return userModels;
         }
         public List<UserModel> Login(UserModel userModel)
@@ -84,18 +84,24 @@ namespace TweetApp.Service.Implementation
             bool status = false;
             try
             {
-                userModel.createdAt = DateTime.Now;
-                userModel.updatedAt = DateTime.Now;
-                status = _userRepository.Create(userModel);
+                UserModel checkExist = new UserModel();
+                checkExist = _userRepository.FindByCondtion(x => x.email.Equals(userModel.email) 
+                              && x.username.Equals(userModel.username));
+                if(checkExist==null)
+                {
+                    userModel.createdAt = DateTime.Now;
+                    userModel.updatedAt = DateTime.Now;
+                    status = _userRepository.Create(userModel);
+                    return true;
+                }
             }
             catch (Exception)
             {
-
                 throw;
             }
             return status;
         }
-        public bool ResetPassword(UserModel userModel)
+        public bool ForgotPassword(UserModel userModel)
         {
             bool status = false;
             try

@@ -36,8 +36,8 @@ namespace TweetAppApi
 
             services.AddSingleton<IDatabaseSettings>(x => x.GetRequiredService<IOptions<DatabaseSettings>>().Value);
             
-            services.AddSingleton<ITweetRepository, TweetRepository>();
-            services.AddSingleton<ITweetService,TweetService>();
+            services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IUserService,UserService>();
 
             services.AddControllers();
             services.AddApiVersioning(config=> {
