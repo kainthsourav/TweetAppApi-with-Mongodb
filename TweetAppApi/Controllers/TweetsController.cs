@@ -13,11 +13,11 @@ namespace TweetAppApi
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("1.0")]
-    public class UserdataController : ControllerBase
+    public class TweetsController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly ITweetService _userService;
 
-        public UserdataController(IUserService userService)
+        public TweetsController(ITweetService userService)
         {
             _userService = userService;
          

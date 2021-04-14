@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
+using TweetApp.DAL.Models;
 
 namespace TweetApp.Repository.Interface
 {
-    interface ITweetRepository
+    public interface ITweetRepository
     {
+        List<UserModel> FindAll();
+        UserModel FindByCondtion(Expression<Func<UserModel, bool>> expression);
+        bool Create(UserModel data);
+        bool Update(UserModel data);
+        bool Delete(UserModel data);
     }
 }
