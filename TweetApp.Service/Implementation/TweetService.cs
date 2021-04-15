@@ -58,6 +58,7 @@ namespace TweetApp.Service.Implementation
             try
             {
                 _tweetRepository.Update(tweetModel);
+                return true;
             }
             catch (Exception)
             {

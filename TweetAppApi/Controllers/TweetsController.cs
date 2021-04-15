@@ -27,59 +27,122 @@ namespace TweetAppApi
         [HttpGet("users/all")]
         public ActionResult<List<UserModel>> Get()
         {
-            return _userService.GetAllUsers();
+            List<UserModel> allUsers = new List<UserModel>();
+            try
+            {
+               allUsers= _userService.GetAllUsers();
+                if(allUsers.Count==0)
+                {
+                    return NotFound("No data available");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return allUsers;
         }
 
         [HttpGet("getUsers/{id}")]
         public ActionResult<List<UserModel>> Get(string id)
         {
             List<UserModel> userModels = new List<UserModel>();
-            userModels = _userService.GetUserById(id);
-            if(userModels.Count()==0)
+            try
             {
-                return NotFound();
+                userModels = _userService.GetUserById(id);
+                if (userModels.Count() == 0)
+                {
+                    return NotFound();
+                }
             }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
             return userModels;
         }
 
         [HttpPost("regsiter")]
         public ActionResult RegisterUser([FromBody] UserModel userModel)
         {
-            _userService.RegisterUser(userModel);
-            return Ok();
-        }
-        
-        [HttpPost("login")]
-        public ActionResult<List<UserModel>> Login([FromBody] UserModel userModel)
-        {
-            var result= _userService.Login(userModel);
-            return result;
-        }
-
-        [HttpPost("resetPassword")]
-        public ActionResult ResetPassword(ChangePasswordModel changePassword)
-        {
             bool status = false;
             try
             {
-                _userService.ResetPassword(changePassword);
-                status = true;
+               status= _userService.RegisterUser(userModel);
+                if(status)
+                {
+                    return Ok("User Register Successfully");
+                }
             }
             catch (Exception)
             {
                 throw;
             }
-            return Ok();
+           
+            return BadRequest("Unable to Register User");
+        }
+        
+        [HttpPost("login")]
+        public ActionResult<List<UserModel>> Login([FromBody] UserModel userModel)
+        {
+            try
+            {
+                var result = _userService.Login(userModel);
+                if(result.Count!=0)
+                {
+                    return result;
+                }
+                return NotFound("Invaild login credentials");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return BadRequest();
+        }
+
+        [HttpPost("resetPassword")]
+        public ActionResult ResetPassword(ChangePasswordModel changePassword)
+        {
+            try
+            {
+               var status= _userService.ResetPassword(changePassword);
+               if(status)
+                {
+                    return Ok("Password reset sucessfully");
+                }
+                return Conflict("Inccorrect current password given");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return BadRequest();
         }
         
         [HttpGet("user/search/{username}")]
         public ActionResult<List<UserModel>> GetByUsername(string username)
         {
             List<UserModel> userModels = new List<UserModel>();
+            try
+            {
+                userModels = _userService.GetUserByUsername(username);
+                if(userModels.Count!=0)
+                {
+                    return userModels;
+                }
+                return NotFound("No data found");
+            }
+            catch (Exception)
+            {
 
-            userModels=_userService.GetUserByUsername(username);
+                throw;
+            }
 
-            return userModels;
+            return BadRequest();
            
         }
 
@@ -88,19 +151,21 @@ namespace TweetAppApi
         { 
             try
             {
-                _userService.ForgotPassword(userModel);
+               var status= _userService.ForgotPassword(userModel);
+                if(status)
+                {
+                    return Ok("Forgot Password successfully");
+                }
+                return Conflict("Given detials does not match");
             }
             catch (Exception)
             {
 
                 throw;
             }
-            return Ok();
+            return BadRequest();
         }
-       /* public IActionResult Index()
-        {
-            return Ok("TweetApp Web Api");
-        }*/
+     
         #endregion
 
         #region Tweets
@@ -108,35 +173,84 @@ namespace TweetAppApi
         [HttpPost("{username}/add")]
         public ActionResult<TweetModel> PostTweet([FromBody] TweetModel tweetModel)
         {
-            _tweetService.postTweet(tweetModel);
-            return Ok();
+            try
+            {
+                var status = _tweetService.postTweet(tweetModel);
+                if(status)
+                {
+                    return Ok("Tweet Sent");
+                }
+                return Conflict("Unable to post tweet");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return BadRequest();
         }
 
         [HttpGet("all")]
         public ActionResult<List<TweetModel>> getTweet()
         {
-            return _tweetService.getAllTweets();
+            try
+            {
+                var result= _tweetService.getAllTweets();
+                if(result.Count!=0)
+                {
+                    return result;
+                }
+                return NotFound("No Tweets found");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return BadRequest();
         }
 
         [HttpGet("{username}")]
         public ActionResult<List<TweetModel>> getUserTweets(string username)
         {
-            return _tweetService.getAllTweetsOfUser(username);
-        }
-
-        [HttpPut("update/{id}")]
-        public ActionResult<List<TweetModel>> updateTweet([FromBody] TweetModel tweetModel)
-        {
-            bool status = false;
             try
             {
-                status=_tweetService.UpdateTweet(tweetModel);
+                var result = _tweetService.getAllTweetsOfUser(username);
+                if (result.Count != 0)
+                {
+                    return result;
+                }
+                return NotFound("No Tweets found");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return BadRequest();
+        }
+
+        [HttpPut("update")]
+        public ActionResult<List<TweetModel>> updateTweet([FromBody] TweetModel tweetModel)
+        {
+           
+            try
+            {
+                var status = _tweetService.UpdateTweet(tweetModel);
+                if(status)
+                {
+                    return Ok("Tweet updated successfully");
+                }
+                else
+                {
+                    return Conflict("Unable to update tweet");
+                }
             }
             catch (Exception)
             {
                 throw;
             }
-            return Ok();
+            return BadRequest();
         }
         #endregion
     }
