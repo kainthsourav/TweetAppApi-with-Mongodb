@@ -47,6 +47,8 @@ namespace TweetAppApi
                 //config.AssumeDefaultVersionWhenUnspecified = true;
               //  config.ReportApiVersions = true;
             });
+
+            services.AddSwaggerGen();
         } 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -64,6 +66,12 @@ namespace TweetAppApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
             });
         }
     }

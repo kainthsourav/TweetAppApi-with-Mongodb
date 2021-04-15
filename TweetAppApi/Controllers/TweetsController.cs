@@ -97,10 +97,10 @@ namespace TweetAppApi
             }
             return Ok();
         }
-        public IActionResult Index()
+       /* public IActionResult Index()
         {
             return Ok("TweetApp Web Api");
-        }
+        }*/
         #endregion
 
         #region Tweets
